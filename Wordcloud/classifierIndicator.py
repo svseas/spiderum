@@ -1,10 +1,8 @@
-from underthesea import pos_tag
+#from underthesea import pos_tag
 
-f = open('output.txt', 'r')
+#f = open('output.txt', 'r')
 
-for x in f:
-    y = x[:-3]
-    for s in y.split() if s.isdigit()):
-        int(s)
-        print(s)
+#for x in f:
+#    y = x[:-3]
+#    print(int(s) for s in y.split() if s.isdigit())
 

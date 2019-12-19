@@ -51,9 +51,13 @@ from collections import Counter
 
 #keywordStatistics = MyCounter(Counter(keywords).most_common())
 
-keywordStatistics = Counter(keywords).most_common()
+kwStats = Counter(keywords).most_common()
 
-print(keywordStatistics[:10])
+#print(keywordStatistics[:10])
+
+kwStatsDf = pd.DataFrame(kwStats, columns = ['keyword', 'frequency'])
+
+print(kwStatsDf.head())
 
 #with open ('output.txt', 'w') as outputFile:
 #    outputFile.write(str(keywordStatistics))
@@ -62,3 +66,9 @@ print(keywordStatistics[:10])
 
 #with open ('categories.csv', 'w') as categoriesFile:
 #    df.to_csv(categoriesFile, sep='\t', encoding='utf-8')
+
+from underthesea import pos_tag
+
+kwStats['pos'] =  pos_tag(kwStats['keyword'])
+
+print(kwStats.head(100))
