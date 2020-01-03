@@ -6,8 +6,8 @@ import numpy as np
 import json
 
 path = '/home/truongtang/Spiderum/post_lib/'
-#numberOfPost = len(os.listdir(path)) #for all posts
-numberOfPost = 50
+numberOfPost = len(os.listdir(path)) #for all posts
+#numberOfPost = 50
 
 #print(numberOfPost)
 
@@ -65,8 +65,14 @@ catStats = Counter(allCategory).most_common()
 dfStats = pd.DataFrame(catStats, columns = ['Category', 'Freq'])
 dfStats['Percentage'] = dfStats['Freq']/dfStats['Freq'].sum()
 
-print(dfStats.sort_values(by = ['Percentage'], ascending = False))
+#print(dfStats.sort_values(by = ['Percentage'], ascending = False))
 
+print(dfStats.head())
+
+with open ('current_categories.csv', 'w') as currentCategoriesFile:
+    dfStats.to_csv(currentCategoriesFile, sep='\t', encoding='utf-8')
+
+print('Current Categories Data Export!')
 #kwStatsAndPos = []
 #for i in kwStats:
 #    kwPos = pos_tag(i[0])
@@ -89,4 +95,4 @@ print(dfStats.sort_values(by = ['Percentage'], ascending = False))
 #print(df.head())
 
 #with open ('categories.csv', 'w') as categoriesFile:
-#df.to_csv(categoriesFile, sep='\t', encoding='utf-8')
+#    df.to_csv(categoriesFile, sep='\t', encoding='utf-8')

@@ -1,0 +1,5 @@
+Spiderum category todos: 
+
+- Làm report bao gồm cả category lẫn wordcloud 
+- Làm thêm analytics dành cho 10 và 20
+- Tính coefficent của từng category 
