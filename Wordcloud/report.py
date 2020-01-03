@@ -39,4 +39,17 @@ def makeData (path):
 path1 = '/home/truongtang/Spiderum/post_lib_sample/'
 
 sampleDF = makeData(path1)
-print(sampleDF)
+
+def eliminateDuplicate(list):
+    return list(dict.fromkeys(list))
+
+def keyword(df,column):
+    allContent = list(df[column].apply(pd.Series).stack())
+    keywords = list(filter(lambda x: ( ' ' in x), allContent))
+    from collections import Counter
+    kwStats = Counter(keywords).most_common()
+    for value, count in kwStats:
+        print(value,count)
+
+print(keyword(sampleDF, 'Tokenized'))
+
