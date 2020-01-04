@@ -4,6 +4,8 @@ from underthesea import word_tokenize, classify, pos_tag
 import pandas as pd 
 import numpy as np 
 import json 
+import time
+from tqdm import tqdm
 
 def makeData (path):
     #path = ''
@@ -14,9 +16,9 @@ def makeData (path):
     listOfContent = []
     listOfTokenizedText = []
 
-    for i in range(1, numberOfPost):
+    for i in tqdm(range(1, numberOfPost)):
         fileName = path + 'posts-' + str(i) + '.json'
-
+        time.sleep(3)
         with open (fileName, 'r') as textFile:
             data = textFile.read()
             text = json.loads(data)
@@ -36,9 +38,9 @@ def makeData (path):
     #print(df.head(50))
     return (df)
 
-path1 = '/home/truongtang/Spiderum/post_lib_sample/'
+path1 = '/home/truongtang/Spiderum/post_lib_30/'
 
-sampleDF = makeData(path1)
+allContentDF = makeData(path1)
 
 def eliminateDuplicate(list):
     return list(dict.fromkeys(list))
@@ -51,5 +53,7 @@ def keyword(df,column):
     for value, count in kwStats:
         print(value,count)
 
-print(keyword(sampleDF, 'Tokenized'))
+df1 = allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận']
+
+print(keyword(df1, 'Tokenized'))
 
