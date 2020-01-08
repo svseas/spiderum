@@ -9,8 +9,8 @@ from tqdm import tqdm
 
 def makeData (path):
     #path = ''
-    numberOfPost = len(os.listdir(path))
-    #numberOfPost =  10
+    #numberOfPost = len(os.listdir(path))
+    numberOfPost =  10
 
     listOfTitles = []
     listOfCategories = []
@@ -39,17 +39,21 @@ def makeData (path):
     #print(df.head(50))
     return (df)
 
-path1 = '/home/truongtang/Spiderum/post_lib_30/'
+path1 = '/home/truongtang/Spiderum/post_lib_50/'
 
 allContentDF = makeData(path1)
+
+categoryList = allContentDF['Category'].drop_duplicates().values.tolist()
+
+print(categoryList)
 
 print(allContentDF.head())
 
 def eliminateDuplicate(list):
     return list(dict.fromkeys(list))
 
-def keyword(df,column):
-    allContent = list(df[column].apply(pd.Series).stack())
+def keyword(df):
+    allContent = list(df['Tokenized'].apply(pd.Series).stack())
     keywords = list(filter(lambda x: ( ' ' in x), allContent))
     from collections import Counter
     kwStats = Counter(keywords).most_common(100)
@@ -58,9 +62,20 @@ def keyword(df,column):
     #for value, count in kwStats:
     #    print(value,count)
 
-#df1 = allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận']
+class subDf():
+    def __init__ (self, name, dataFrame, noOfSub):
+        self.name = name
+        self.dataFrame = dataFrame
+        self.noOfSub = noOfSub
 
-#dfKeyword = keyword(df1, 'Tokenized')
+    def kwStats(self):
+        dataFrame = self.dataFrame
+        return keyword(dataFrame)
+
+df1 = subDf('Quan điểm tranh luận', allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận'], 50)
+
+print(df1.kwStats())
+
 
 #export_csv = dfKeyword.to_csv('keywordfreq-QDTL.csv', sep = '\t', encoding = 'utf-8')
 
