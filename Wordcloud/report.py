@@ -14,8 +14,8 @@ print(catDf.loc[catDf['cat_name'] == 'Quan điểm - Tranh luận', 'count'])
 
 def makeData (path):
     #path = ''
-    #numberOfPost = len(os.listdir(path))
-    numberOfPost =  10
+    numberOfPost = len(os.listdir(path))
+    #numberOfPost =  10
 
     listOfTitles = []
     listOfCategories = []
@@ -87,7 +87,7 @@ class subDf():
         return noOfSub
     
     def noOfArticle(self):
-        allCategory = list(self.dataFrame['Tokenized'].apply(pd.Series).stack())
+        allCategory = list(self.dataFrame['Category'].apply(pd.Series).stack())
         
         noOfArticle = Counter(allCategory)
 
@@ -98,6 +98,7 @@ df1 = subDf('Quan điểm - Tranh luận', allContentDF[allContentDF.Category ==
 
 #print(df1.kwStats())
 print(df1.noOfSub())
+print(df1.noOfArticle())
 
 #export_csv = dfKeyword.to_csv('keywordfreq-QDTL.csv', sep = '\t', encoding = 'utf-8')
 
