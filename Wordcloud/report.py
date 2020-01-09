@@ -6,6 +6,11 @@ import numpy as np
 import json 
 import time
 from tqdm import tqdm
+from collections import Counter
+
+catDf = pd.read_json('/home/truongtang/Spiderum/sub_by_cat/subcribeCatByUser.json').sort_values(by = ['count'], ascending = False)
+
+print(catDf.loc[catDf['cat_name'] == 'Quan điểm - Tranh luận', 'count'])
 
 def makeData (path):
     #path = ''
@@ -55,27 +60,44 @@ def eliminateDuplicate(list):
 def keyword(df):
     allContent = list(df['Tokenized'].apply(pd.Series).stack())
     keywords = list(filter(lambda x: ( ' ' in x), allContent))
-    from collections import Counter
+
+   
     kwStats = Counter(keywords).most_common(100)
     df = pd.DataFrame(kwStats, columns = ['keyword', 'freq']) 
+
     return df
     #for value, count in kwStats:
     #    print(value,count)
 
 class subDf():
-    def __init__ (self, name, dataFrame, noOfSub):
+    def __init__ (self, name, dataFrame, ):
         self.name = name
         self.dataFrame = dataFrame
-        self.noOfSub = noOfSub
-
+    
     def kwStats(self):
-        dataFrame = self.dataFrame
-        return keyword(dataFrame)
+        
+        return keyword(self.dataFrame)
+    
+    def noOfSub(self):
 
-df1 = subDf('Quan điểm tranh luận', allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận'], 50)
+        noOfSub = catDf.loc[catDf
+        
+        ['cat_name'] == str(self.name), 'count'].iloc[0]
+        
+        return noOfSub
+    
+    def noOfArticle(self):
+        allCategory = list(self.dataFrame['Tokenized'].apply(pd.Series).stack())
+        
+        noOfArticle = Counter(allCategory)
 
-print(df1.kwStats())
+        return noOfArticle
+        
 
+df1 = subDf('Quan điểm - Tranh luận', allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận'])
+
+#print(df1.kwStats())
+print(df1.noOfSub())
 
 #export_csv = dfKeyword.to_csv('keywordfreq-QDTL.csv', sep = '\t', encoding = 'utf-8')
 
