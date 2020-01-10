@@ -8,14 +8,14 @@ import time
 from tqdm import tqdm
 from collections import Counter
 
+#Create DF for Category to count the number of subcriber in each Category
 catDf = pd.read_json('/home/truongtang/Spiderum/sub_by_cat/subcribeCatByUser.json').sort_values(by = ['count'], ascending = False)
 
-print(catDf.loc[catDf['cat_name'] == 'Quan điểm - Tranh luận', 'count'])
-
+#function to make data from folder of articles
 def makeData (path):
     #path = ''
     numberOfPost = len(os.listdir(path))
-    #numberOfPost =  10
+    #numberOfPost =  5
 
     listOfTitles = []
     listOfCategories = []
@@ -44,19 +44,31 @@ def makeData (path):
     #print(df.head(50))
     return (df)
 
-path1 = '/home/truongtang/Spiderum/post_lib_50/'
+noList = [10, 20]
+pathList = []
+allContentDFList = []
 
-allContentDF = makeData(path1)
+for i in noList:
+    path = '/home/truongtang/Spiderum/post_lib_' + str(i) + '/'
+    pathList.append(path)
+    allContentDF = makeData(path)
+    allContentDFList.append(allContentDF)
 
-categoryList = allContentDF['Category'].drop_duplicates().values.tolist()
 
-print(categoryList)
+#For post with more than 50 upvotes
+#path50 = '/home/truongtang/Spiderum/post_lib_50/'
+#allContentDF50 = makeData(path50)
+#categoryList50 = allContentDF50['Category'].drop_duplicates().values.tolist()
 
-print(allContentDF.head())
+#print(categoryList50)
+#print(allContentDF50.head())
 
+#drop dub function (just in case)
 def eliminateDuplicate(list):
     return list(dict.fromkeys(list))
 
+
+#function for counting keywords 
 def keyword(df):
     allContent = list(df['Tokenized'].apply(pd.Series).stack())
     keywords = list(filter(lambda x: ( ' ' in x), allContent))
@@ -69,6 +81,8 @@ def keyword(df):
     #for value, count in kwStats:
     #    print(value,count)
 
+
+#class for getting separate reports 
 class subDf():
     def __init__ (self, name, dataFrame, ):
         self.name = name
@@ -87,18 +101,25 @@ class subDf():
         return noOfSub
     
     def noOfArticle(self):
+        
         allCategory = list(self.dataFrame['Category'].apply(pd.Series).stack())
         
         noOfArticle = Counter(allCategory)
 
         return noOfArticle
         
+df10 = subDf('Quan điểm - Tranh luận', allContentDFList[0][allContentDFList[0].Category == 'Quan điểm - Tranh luận'])
 
-df1 = subDf('Quan điểm - Tranh luận', allContentDF[allContentDF.Category == 'Quan điểm - Tranh luận'])
+print(df10.kwStats())
+print(df10.noOfSub())
+print(df10.noOfArticle())
 
-#print(df1.kwStats())
-print(df1.noOfSub())
-print(df1.noOfArticle())
+df20 = subDf('Quan điểm - Tranh luận', allContentDFList[0][allContentDFList[0].Category == 'Quan điểm - Tranh luận'])
+
+print(df20.kwStats())
+print(df20.noOfSub())
+print(df20.noOfArticle())
 
 #export_csv = dfKeyword.to_csv('keywordfreq-QDTL.csv', sep = '\t', encoding = 'utf-8')
+
 
