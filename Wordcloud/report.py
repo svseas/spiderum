@@ -15,7 +15,7 @@ catDf = pd.read_json('/home/truongtang/Spiderum/sub_by_cat/subcribeCatByUser.jso
 def makeData (path):
     #path = ''
     numberOfPost = len(os.listdir(path))
-    #numberOfPost =  5
+    #numberOfPost =  10
 
     listOfTitles = []
     listOfCategories = []
@@ -44,16 +44,16 @@ def makeData (path):
     #print(df.head(50))
     return (df)
 
-noList = [10, 20]
+noList = [10, 20, 30, 40, 50]
 pathList = []
 allContentDFList = []
 
-for i in noList:
-    path = '/home/truongtang/Spiderum/post_lib_' + str(i) + '/'
-    pathList.append(path)
-    allContentDF = makeData(path)
-    allContentDFList.append(allContentDF)
-
+if __name__ == "__main__":
+    for i in noList:
+        path = '/home/truongtang/Spiderum/post_lib_' + str(i) + '/'
+        pathList.append(path)
+        allContentDF = makeData(path)
+        allContentDFList.append(allContentDF)
 
 #For post with more than 50 upvotes
 #path50 = '/home/truongtang/Spiderum/post_lib_50/'
@@ -84,13 +84,13 @@ def keyword(df):
 
 #class for getting separate reports 
 class subDf():
-    def __init__ (self, name, dataFrame, ):
+    def __init__ (self, name, dataFrame ):
         self.name = name
         self.dataFrame = dataFrame
     
-    def kwStats(self):
+    #def kwStats(self):
         
-        return keyword(self.dataFrame)
+    #    return keyword(self.dataFrame)
     
     def noOfSub(self):
 
@@ -104,21 +104,51 @@ class subDf():
         
         allCategory = list(self.dataFrame['Category'].apply(pd.Series).stack())
         
-        noOfArticle = Counter(allCategory)
+        noOfArticle = pd.DataFrame(Counter(allCategory).most_common(), columns = ['Category', 'Number of Article'])
 
         return noOfArticle
         
-df10 = subDf('Quan điểm - Tranh luận', allContentDFList[0][allContentDFList[0].Category == 'Quan điểm - Tranh luận'])
+#df10 = subDf('Quan điểm - Tranh luận', allContentDFList[0][allContentDFList[0].Category == 'Quan điểm - Tranh luận'])
 
-print(df10.kwStats())
-print(df10.noOfSub())
-print(df10.noOfArticle())
+#print(df10.kwStats())
+#print(df10.noOfSub())
+#print(df10.noOfArticle())
+import pickle
 
-df20 = subDf('Quan điểm - Tranh luận', allContentDFList[0][allContentDFList[0].Category == 'Quan điểm - Tranh luận'])
+if __name__ == '__main__':
+    df10 = subDf('upvote count: 10', allContentDFList[0])
+    df20 = subDf('upvote count: 20', allContentDFList[1])
+    df30 = subDf('upvote count: 30', allContentDFList[2])
+    df40 = subDf('upvote count: 40', allContentDFList[3])
+    df50 = subDf('upvote count: 50', allContentDFList[4])
 
-print(df20.kwStats())
-print(df20.noOfSub())
-print(df20.noOfArticle())
+    f = open('data.pickle', 'wb')
+
+    pickle.dump(df10, f)
+    pickle.dump(df20, f)
+    pickle.dump(df30, f)
+    pickle.dump(df40, f)
+    pickle.dump(df50, f)
+    f.close()
+
+    f = open('data.pickle', 'rb')
+
+    df10 = pickle.load(f)
+    df20 = pickle.load(f)
+    df30 = pickle.load(f)
+    df40 = pickle.load(f)
+    df50 = pickle.load(f)
+
+
+
+
+
+
+#df20 = subDf('Quan điểm - Tranh luận', allContentDFList[1][allContentDFList[1].Category == 'Quan điểm - Tranh luận'])
+
+#print(df20.kwStats())
+#print(df20.noOfSub())
+#print(df20.noOfArticle())
 
 #export_csv = dfKeyword.to_csv('keywordfreq-QDTL.csv', sep = '\t', encoding = 'utf-8')
 
